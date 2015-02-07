@@ -1,0 +1,15 @@
+{
+  "name": "touch-library",
+  "version": "1.0.0",
+  "description": "Sistema de gerenciamento de Livros da Touch",
+  "author": "Bruno Viana bbviana@touchhealth.com.br",
+  "dependencies": {
+    "gulp": "~3.8.10",
+    "gulp-browserify": "~0.5.1",
+    "gulp-concat": "~2.4.3",
+    "jquery": "~2.1.3",
+    "object-assign": "~2.0.0",
+    "react": "~0.12.2",
+    "reactify": "~1.0.0"
+  }
+}
