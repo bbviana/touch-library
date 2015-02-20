@@ -6,7 +6,7 @@ var uglify = require('gulp-uglify');
 
 var paths = {
     src: 'src/main/webapp/js',
-    target: 'target/rupees/js'
+    target: 'target/touch-library/js'
 };
 
 gulp.task('browserify', function () {
