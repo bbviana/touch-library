@@ -1,5 +1,7 @@
 var React = require('react');
+
 var StarRating = require('./StarRating');
+
 
 var ReviewCard = React.createClass({
     render: function () {

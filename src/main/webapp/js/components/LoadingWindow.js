@@ -1,13 +1,23 @@
 var React = require('react');
-var PropTypes = React.PropTypes;
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
+var StoreWatchMixin = require('../flux/StoreWatchMixin');
+
+var LoadingStore = require('../stores/LoadingStore');
+
 
 var LoadingWindow = React.createClass({
-    propTypes: {
-        loading: PropTypes.bool.isRequired
+    mixins: [PureRenderMixin, StoreWatchMixin(LoadingStore)],
+
+    getStateFromStores: function () {
+        return {
+            loading: LoadingStore.isLoading()
+        };
     },
 
     render: function () {
-        if (!this.props.loading) {
+        console.log("LoadingWindow:render");
+        
+        if (!this.state.loading) {
             return null;
         }
 

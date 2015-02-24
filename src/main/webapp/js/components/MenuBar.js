@@ -1,5 +1,7 @@
 var React = require('react');
+
 var Menu = require('./Menu');
+
 
 var MenuBar = React.createClass({
     render: function () {

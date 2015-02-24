@@ -6,7 +6,6 @@ import org.bson.types.ObjectId;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -31,7 +30,7 @@ public class BookDAO {
     }
 
 
-    public void insert(Book book) {
+    public Book insert(Book book) {
         DBObject object = BasicDBObjectBuilder.start()
                 .append("title", book.getTitle())
                 .append("category", book.getCategory())
@@ -42,16 +41,15 @@ public class BookDAO {
                 .get();
 
         db.getCollection("books").insert(object);
+        book.setId(object.get("_id").toString());
         System.out.println(format("Livro %s salvo no banco.", book.getTitle()));
+
+        return book;
     }
 
     public List<Book> list() {
         List<Book> books = new ArrayList<>();
-
-        db.getCollection("books").find().forEach(object -> {
-            books.add(toBook((BasicDBObject) object));
-        });
-
+        db.getCollection("books").find().forEach(object -> books.add(toBook((BasicDBObject) object)));
         return books;
     }
 
@@ -75,8 +73,7 @@ public class BookDAO {
     private static Binary toBinary(String filePath) {
         try {
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-            Binary binary = new Binary(bytes);
-            return binary;
+            return new Binary(bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

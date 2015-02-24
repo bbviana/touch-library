@@ -1,5 +1,3 @@
-var Promise = require('es6-promise').Promise;
-
 var _callbacks = [];
 
 var Dispatcher = {

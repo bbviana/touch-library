@@ -1,9 +1,11 @@
 var React = require('react');
+
+var AddBookButton = require('./AddBookButton');
 var Logo = require('./Logo');
+var MenuBar = require('./MenuBar');
 var Search = require('./Search');
 var UserInfo = require('./UserInfo');
-var MenuBar = require('./MenuBar');
-var AddBookButton = require('./AddBookButton');
+
 
 var Header = React.createClass({
     render: function () {

@@ -1,58 +1,30 @@
 var React = require('react');
+var PropTypes = React.PropTypes;
+var ActionCreators = require('../actions/ActionCreators');
 
+/**
+ * TODO permitir especificar uma url de imagem
+ */
 var FileUpload = React.createClass({
-    getInitialState: function () {
-        return {preview: null, progress: null};
+    propTypes: {
+        fileType: PropTypes.string.isRequired,
+        progressStatus: PropTypes.string,
+        preview: PropTypes.string
     },
 
     _onChange: function () {
-        // TODO validar se é imagem
-        this.setState({preview: null});
-
         var file = this.refs.input.getDOMNode().files[0];
         if (file) {
-            this._showPreview(file);
-            this._upload(file);
+            ActionCreators.uploadFile(this.props.fileType, file);
         }
-    },
-    _showPreview: function (file) {
-        var self = this;
-        var reader = new FileReader();
-
-        reader.onload = function (re) {
-            self.setState({preview: re.target.result});
-        };
-
-        reader.readAsDataURL(file);
-    },
-    _upload: function (file) {
-        var self = this;
-        var data = new FormData();
-        data.append("file", file);
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.upload.addEventListener("progress", function (e) {
-            self.setState({progress: self._roundToTwo((e.loaded / e.total) * 100) + "%"});
-        }, false);
-
-        xhr.addEventListener("load", function (e) {
-            self.setState({progress: null});
-        }, false);
-
-        xhr.open("post", "/touch-library/ws/books/upload", true);
-        xhr.send(data);
-    },
-    _roundToTwo: function (num) {
-        return Math.round(num * 100) / 100;
     },
 
     render: function () {
         return (
-            <div>
+            <div style={styles.container}>
                 <input ref="input" type="file" onChange={this._onChange}/>
-                <div>{this.state.progress}</div>
-                <img style={styles.image} src={this.state.preview} />
+                <div>{this.props.progressStatus}</div>
+                <img style={styles.image} src={this.props.preview} />
             </div>
         );
     }

@@ -1,6 +1,7 @@
 var React = require('react');
 var m = require('../utils').m;
 
+
 var StarRating = React.createClass({
     getDefaultProps: function () {
         return {size: "small"}

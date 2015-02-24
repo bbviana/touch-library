@@ -1,6 +1,7 @@
 var React = require('react');
-var m = require('../utils/').m;
 var $ = require('jquery');
+var m = require('../utils/').m;
+
 
 var Menu = React.createClass({
     getInitialState: function () {

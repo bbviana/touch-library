@@ -1,5 +1,7 @@
 var React = require('react');
+
 var BookCard = require('./BookCard');
+
 
 var Similar = React.createClass({
     render: function () {

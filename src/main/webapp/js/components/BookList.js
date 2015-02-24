@@ -1,23 +1,39 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
+var StoreWatchMixin = require('../flux/StoreWatchMixin');
+var ActionCreators = require('../actions/ActionCreators');
+var BookListStore = require('../stores/BookListStore');
+
 var BookCard = require('./BookCard');
 var SeeMore = require('./SeeMore');
 
+
 var BookList = React.createClass({
-    propTypes: {
-        books: PropTypes.array.isRequired,
-        title: PropTypes.string.isRequired
+    mixins: [StoreWatchMixin(BookListStore)],
+
+    getStateFromStores: function () {
+        return {
+            books: BookListStore.getBooks()
+        };
+    },
+
+    componentDidMount: function () {
+        ActionCreators.loadBooks();
     },
 
     render: function () {
+        console.log("BookList:render");
+
+        var title = "Java";
+
         return (
             <div className="book-list" style={styles.container}>
                 <h1 className="heading" style={styles.heading}>
-                    <a style={styles.title} href="books/tag/XXX">{this.props.title}</a>
+                    <a style={styles.title} href="books/tag/XXX">{title}</a>
                     <SeeMore />
                 </h1>
                 <div className="book-list" style={styles.list}>
-                    {this.props.books.map(function (book, i) {
+                    {this.state.books.map(function (book, i) {
                         return <BookCard book={book} key={i} />;
                     })}
                 </div>

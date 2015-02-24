@@ -1,8 +1,5 @@
 var React = require('react');
 var RouterMixin = require('react-mini-router').RouterMixin;
-var StoreWatchMixin = require('../flux/StoreWatchMixin');
-var AppStore = require('../stores/AppStore');
-var BookStore = require('../stores/BookStore');
 
 var BookDetails = require('./BookDetails');
 var BookForm = require('./BookForm');
@@ -11,8 +8,9 @@ var Footer = require('./Footer');
 var Header = require('./Header');
 var LoadingWindow = require('./LoadingWindow');
 
+
 var App = React.createClass({
-    mixins: [RouterMixin, StoreWatchMixin(AppStore, BookStore)],
+    mixins: [RouterMixin],
 
     routes: {
         '/': 'home',
@@ -20,35 +18,27 @@ var App = React.createClass({
         '/books/:id': 'details'
     },
 
-    // invocado a partir de: getInitialState, store:change
-    getStateFromStores: function () {
-        return {
-            loading: AppStore.isLoading(),
-            currentBook: BookStore.getCurrentBook(),
-            books: BookStore.getBooks()
-        };
-    },
-
     home: function () {
-        return <BookList books={this.state.books} title="Java"/>
+        return <BookList />
     },
     details: function (id) {
-        return <BookDetails book={this.state.currentBook} />
+        return <BookDetails bookId={id} />
     },
     create: function () {
         return <BookForm />
     },
 
     render: function () {
-        // imlementar shouldComponentUpdate() para evitar renderizações desnecessarias
+        console.log("App:render");
+
         return (
             <div style={styles.container}>
+                <LoadingWindow />
                 <Header/>
                 <div style={styles.center}>
                     {this.renderCurrentRoute()}
                 </div>
                 <Footer />
-                <LoadingWindow loading={this.state.loading}/>
             </div>
         );
     }

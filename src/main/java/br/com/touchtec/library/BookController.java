@@ -1,5 +1,6 @@
 package br.com.touchtec.library;
 
+import br.com.touchtec.library.files.UploadedFilesTemp;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
@@ -9,7 +10,7 @@ import org.bson.types.ObjectId;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -24,33 +25,33 @@ import static javax.ws.rs.core.MediaType.*;
  * @author bbviana
  */
 @Path("books")
-@ApplicationScoped
+@RequestScoped
 @Produces(APPLICATION_JSON)
 public class BookController {
 
     @Inject
     private BookDAO bookDAO;
 
+    @Inject
+    private UploadedFilesTemp filesTemp;
+
     @POST
     @Consumes(APPLICATION_JSON)
-    public void save(Book book) {
-        bookDAO.insert(book);
+    public Book save(Book book) {
+        Sleeper.sleep(500);
+        return bookDAO.insert(book);
     }
 
     @GET
     @Path("{id}")
     public Book get(@PathParam("id") String id) {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        Sleeper.sleep(500);
         return bookDAO.findById(id);
     }
 
     @GET
     public List<Book> list() {
+        Sleeper.sleep(500);
         return bookDAO.list();
     }
 
@@ -61,16 +62,19 @@ public class BookController {
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) {
 
-        DB db = db();
 
-        GridFS gridFS = new GridFS(db, "images");
-        GridFSInputFile gfsFile = gridFS.createFile(uploadedInputStream, true);
-        gfsFile.setFilename(fileDetail.getFileName());
-        gfsFile.save();
+        String hash = filesTemp.put(uploadedInputStream, fileDetail);
 
-        System.out.println("Arquivo salvo no banco de dados");
+//        DB db = db();
+//
+//        GridFS gridFS = new GridFS(db, "images");
+//        GridFSInputFile gfsFile = gridFS.createFile(uploadedInputStream, true);
+//        gfsFile.setFilename(fileDetail.getFileName());
+//        gfsFile.save();
+//
+//        System.out.println("Arquivo salvo no banco de dados");
 
-        return Response.status(200).build();
+        return Response.status(200).entity(hash).build();
     }
 
     @GET

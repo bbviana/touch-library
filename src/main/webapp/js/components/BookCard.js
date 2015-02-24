@@ -1,21 +1,13 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
-var Actions = require('../actions/AppActions');
 var navigate = require('react-mini-router').navigate;
+
 var StarRating = require('./StarRating');
+
 
 var BookCard = React.createClass({
     propTypes: {
         book: PropTypes.object.isRequired
-    },
-
-    _onClick: function (e) {
-        Actions.loading(true);
-
-        Actions.loadBook(this.props.book.id).then(function (book) {
-            Actions.loading(false);
-            navigate("/touch-library/books/" + book.id);
-        });
     },
 
     render: function () {
@@ -24,10 +16,10 @@ var BookCard = React.createClass({
 
         return (
             <div style={styles.container}>
-                <div className="cover" style={styles.cover} onClick={this._onClick}>
-                    <div style={styles.cell}>
+                <div className="cover" style={styles.cover}>
+                    <a style={styles.link} href={"/touch-library/books/" + book.id}>
                         <img style={styles.image} src={book.cover}/>
-                    </div>
+                    </a>
                 </div>
                 <div style={styles.details}>
                     <div className="title" style={styles.title}>
@@ -63,9 +55,10 @@ var styles = {
         height: 245,
         width: 160
     },
-    cell: {
+    link: {
         display: 'table-cell',
         textAlign: 'center',
+        textDecoration: 'none',
         verticalAlign: 'middle'
     },
     image: {

@@ -1,6 +1,7 @@
 var React = require('react');
 var navigate = require('react-mini-router').navigate;
 
+
 var AddBookButton = React.createClass({
 
     _onClick: function () {

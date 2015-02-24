@@ -1,18 +1,37 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
+var ActionCreators = require('../actions/ActionCreators');
+var BookStore = require('../stores/BookStore');
+var StoreWatchMixin = require('../flux/StoreWatchMixin');
+
 var Description = require('./Description');
 var DownloadButton = require('./DownloadButton');
 var Reviews = require('./Reviews');
 var Similar = require('./Similar');
 var StarRating = require('./StarRating');
 
+
 var BookDetails = React.createClass({
     propTypes: {
-        book: PropTypes.object.isRequired
+        bookId: PropTypes.string.isRequired
+    },
+
+    mixins: [StoreWatchMixin(BookStore)],
+
+    getStateFromStores: function () {
+        return {
+            book: BookStore.getBook()
+        }
+    },
+
+    componentDidMount: function () {
+        ActionCreators.loadBook(this.props.bookId);
     },
 
     render: function () {
-        var book = this.props.book;
+        console.log("BookDetails:render");
+
+        var book = this.state.book;
         var reviews = book.reviews || {};
 
         return (

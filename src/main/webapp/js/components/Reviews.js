@@ -1,7 +1,9 @@
 var React = require('react');
+
 var ReviewCard = require('./ReviewCard');
 var ScoreBox = require('./ScoreBox');
 var WriteAReview = require('./WriteAReview');
+
 
 var Reviews = React.createClass({
     render: function () {
