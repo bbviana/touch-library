@@ -6,6 +6,7 @@ var StoreWatchMixin = require('../flux/StoreWatchMixin');
 
 var Description = require('./Description');
 var DownloadButton = require('./DownloadButton');
+var Image = require('./Image');
 var Reviews = require('./Reviews');
 var Similar = require('./Similar');
 var StarRating = require('./StarRating');
@@ -25,7 +26,9 @@ var BookDetails = React.createClass({
     },
 
     componentDidMount: function () {
-        ActionCreators.loadBook(this.props.bookId);
+        if (this.props.bookId !== this.state.book.id) { // já foi carregado?
+            ActionCreators.loadBook(this.props.bookId);
+        }
     },
 
     render: function () {
@@ -37,7 +40,7 @@ var BookDetails = React.createClass({
         return (
             <div style={styles.container}>
                 <div style={styles.detailsSection}>
-                    <img style={styles.cover} src={book.largeCover}/>
+                    <Image style={styles.cover} id={book.coverId} />
 
                     <div style={styles.info}>
                         <h1 style={styles.title}>{book.title}</h1>
@@ -50,9 +53,9 @@ var BookDetails = React.createClass({
                         </div>
 
                         <div style={styles.actions}>
-                            <DownloadButton title="pdf"/>
-                            <DownloadButton title="epub"/>
-                            <DownloadButton title="mobi"/>
+                            <DownloadButton title="pdf" id={book.pdfId}/>
+                            <DownloadButton title="epub" id={book.epubId}/>
+                            <DownloadButton title="mobi" id={book.mobiId}/>
                         </div>
 
                         <div style={styles.divider}></div>

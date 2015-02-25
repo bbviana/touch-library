@@ -12,7 +12,7 @@ var MenuBar = React.createClass({
                     {title:'CSS', url:'/touch-library/books/agile'},
                     {title:'HTML', url:'/touch-library/books/agile'},
                     {title:'Java', url:'/touch-library/books/agile'},
-                    {title:'Javascript', url:'/touch-library/books/agile'},
+                    {title:'Javascript', url:'/touch-library/books/agile'}
                 ]}/>
                 <Menu title="Home" url="/touch-library/"/>
                 <Menu title="Novidades" url="/touch-library/news"/>

@@ -28,6 +28,7 @@ var files = {
 // Store
 var UploadFilesStore = createStore({
     init: function () {
+        this.bindAction(ActionTypes.CREATE_BOOK_SUCCESS, clear);
         this.bindAction(ActionTypes.UPLOAD_FILE_PREVIEW, uploadFilePreview);
         this.bindAction(ActionTypes.UPLOAD_FILE_PROGRESS, uploadFileProgress);
         this.bindAction(ActionTypes.UPLOAD_FILE_SUCCESS, uploadFileSuccess);
@@ -39,6 +40,9 @@ var UploadFilesStore = createStore({
 });
 
 // private
+function clear(){
+
+}
 
 // TODO deveriamos usar Immutable nos metodos abaixo?
 function uploadFilePreview(payload) {

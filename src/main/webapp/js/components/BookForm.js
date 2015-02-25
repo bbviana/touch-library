@@ -27,7 +27,11 @@ var BookForm = React.createClass({
             author: this.refs.author.getDOMNode().value,
             publisher: this.refs.publisher.getDOMNode().value,
             datePublished: this.refs.datePublished.getDOMNode().value,
-            description: this.refs.description.getDOMNode().value
+            description: this.refs.description.getDOMNode().value,
+            coverId: this.state.cover.hash,
+            pdfId: this.state.pdf.hash,
+            epubId: this.state.epub.hash,
+            mobiId: this.state.mobi.hash
         };
 
         ActionCreators.createBook(book);

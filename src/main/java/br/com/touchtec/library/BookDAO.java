@@ -1,16 +1,16 @@
 package br.com.touchtec.library;
 
+import br.com.touchtec.library.files.FileDAO;
+import br.com.touchtec.library.files.TempFile;
 import com.mongodb.*;
-import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -22,6 +22,9 @@ public class BookDAO {
 
     private DB db;
 
+    @Inject
+    private FileDAO fileDAO;
+
     @PostConstruct
     void loadMongoDB() throws Exception {
         System.out.println("Carregando 'touch-library' database...");
@@ -30,21 +33,32 @@ public class BookDAO {
     }
 
 
-    public Book insert(Book book) {
-        DBObject object = BasicDBObjectBuilder.start()
+    public Book insert(Book book, Map<String, TempFile> files) {
+        // TODO Como transacionar os comandos abaixo?
+
+        String coverId = fileDAO.saveImage(files.get(book.getCoverId()));
+        String pdfId = fileDAO.saveFile(files.get(book.getPdfId()));
+        String epubId = fileDAO.saveFile(files.get(book.getEpubId()));
+        String mobiId = fileDAO.saveFile(files.get(book.getMobiId()));
+
+        BasicDBObject object = (BasicDBObject) BasicDBObjectBuilder.start()
                 .append("title", book.getTitle())
                 .append("category", book.getCategory())
                 .append("author", book.getAuthor())
                 .append("publisher", book.getPublisher())
                 .append("datePublished", book.getDatePublished())
                 .append("description", book.getDescription())
+                .append("coverId", coverId)
+                .append("pdfId", pdfId)
+                .append("epubId", epubId)
+                .append("mobiId", mobiId)
                 .get();
 
         db.getCollection("books").insert(object);
-        book.setId(object.get("_id").toString());
+
         System.out.println(format("Livro %s salvo no banco.", book.getTitle()));
 
-        return book;
+        return toBook(object);
     }
 
     public List<Book> list() {
@@ -58,6 +72,10 @@ public class BookDAO {
         return toBook((BasicDBObject) object);
     }
 
+    private static DBObject toDBObject(Book book) {
+        return null;
+    }
+
     private static Book toBook(BasicDBObject object) {
         Book book = new Book();
         book.setId(object.getObjectId("_id").toString());
@@ -67,15 +85,10 @@ public class BookDAO {
         book.setPublisher(object.getString("publisher"));
         book.setDatePublished(object.getDate("datePublished"));
         book.setDescription(object.getString("description"));
+        book.setCoverId(object.getString("coverId"));
+        book.setPdfId(object.getString("pdfId"));
+        book.setEpubId(object.getString("epubId"));
+        book.setMobiId(object.getString("mobiId"));
         return book;
-    }
-
-    private static Binary toBinary(String filePath) {
-        try {
-            byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-            return new Binary(bytes);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

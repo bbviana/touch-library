@@ -2,6 +2,7 @@ var React = require('react');
 var PropTypes = React.PropTypes;
 var navigate = require('react-mini-router').navigate;
 
+var Image = require('./Image');
 var StarRating = require('./StarRating');
 
 
@@ -18,7 +19,7 @@ var BookCard = React.createClass({
             <div style={styles.container}>
                 <div className="cover" style={styles.cover}>
                     <a style={styles.link} href={"/touch-library/books/" + book.id}>
-                        <img style={styles.image} src={book.cover}/>
+                        <Image style={styles.image} id={book.coverId} />
                     </a>
                 </div>
                 <div style={styles.details}>

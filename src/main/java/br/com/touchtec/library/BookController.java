@@ -1,11 +1,11 @@
 package br.com.touchtec.library;
 
+import br.com.touchtec.library.files.TempFile;
 import br.com.touchtec.library.files.UploadedFilesTemp;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSInputFile;
 import org.bson.types.ObjectId;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -17,7 +17,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.io.InputStream;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static javax.ws.rs.core.MediaType.*;
 
@@ -39,7 +41,17 @@ public class BookController {
     @Consumes(APPLICATION_JSON)
     public Book save(Book book) {
         Sleeper.sleep(500);
-        return bookDAO.insert(book);
+
+        // hash -> TempFile
+        Map<String, TempFile> files = new HashMap<>();
+        files.put(book.getCoverId(), filesTemp.remove(book.getCoverId()));
+        files.put(book.getPdfId(), filesTemp.remove(book.getPdfId()));
+        files.put(book.getEpubId(), filesTemp.remove(book.getEpubId()));
+        files.put(book.getMobiId(), filesTemp.remove(book.getMobiId()));
+
+        filesTemp.clear();
+
+        return bookDAO.insert(book, files);
     }
 
     @GET
@@ -62,21 +74,11 @@ public class BookController {
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) {
 
-
         String hash = filesTemp.put(uploadedInputStream, fileDetail);
-
-//        DB db = db();
-//
-//        GridFS gridFS = new GridFS(db, "images");
-//        GridFSInputFile gfsFile = gridFS.createFile(uploadedInputStream, true);
-//        gfsFile.setFilename(fileDetail.getFileName());
-//        gfsFile.save();
-//
-//        System.out.println("Arquivo salvo no banco de dados");
-
         return Response.status(200).entity(hash).build();
     }
 
+    // TODO cache
     @GET
     @Path("/image/{id}")
     @Produces("image/jpg")
@@ -93,7 +95,7 @@ public class BookController {
     @Produces(APPLICATION_OCTET_STREAM)
     public Response download(@PathParam("id") String id) {
         DB db = db();
-        GridFS gridFS = new GridFS(db, "images");
+        GridFS gridFS = new GridFS(db, "digital");
         GridFSDBFile gfsFile = gridFS.findOne(new ObjectId(id));
 
         ResponseBuilder rb = Response

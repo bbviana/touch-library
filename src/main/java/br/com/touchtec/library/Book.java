@@ -24,6 +24,14 @@ public class Book {
 
     private String description;
 
+    private String coverId;
+
+    private String pdfId;
+
+    private String epubId;
+
+    private String mobiId;
+
     @Override
     public String toString() {
         return reflectionToString(this, SHORT_PREFIX_STYLE);
@@ -85,5 +93,38 @@ public class Book {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getCoverId() {
+        return coverId;
+    }
+
+    public void setCoverId(String coverId) {
+        this.coverId = coverId;
+    }
+
+    public String getPdfId() {
+        return pdfId;
+    }
+
+    public void setPdfId(String pdfId) {
+        this.pdfId = pdfId;
+    }
+
+    public String getEpubId() {
+        return epubId;
+    }
+
+    public void setEpubId(String epubId) {
+        this.epubId = epubId;
+    }
+
+    public String getMobiId() {
+        return mobiId;
+    }
+
+    public void setMobiId(String mobiId) {
+        this.mobiId = mobiId;
+    }
+
     // </editor-fold>
 }

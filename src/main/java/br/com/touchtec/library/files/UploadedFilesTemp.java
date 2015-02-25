@@ -19,8 +19,24 @@ public class UploadedFilesTemp implements Serializable {
 
     private Map<String, TempFile> files = new HashMap<>();
 
-    public TempFile get(String sha) {
-        return files.get(sha);
+    /**
+     * @param hash
+     * @return tempFile ou null; o tempFile permanece no repositório após a invocação o método.
+     */
+    public TempFile get(String hash) {
+        return files.get(hash);
+    }
+
+    /**
+     * @param hash
+     * @return tempFile, removendo-o do repositório; null se não existir um file com o hash correspondente
+     */
+    public TempFile remove(String hash) {
+        return files.remove(hash);
+    }
+
+    public void clear() {
+        files.clear();
     }
 
     public String put(InputStream stream, FormDataContentDisposition details) {
